@@ -1,0 +1,3 @@
+D:/documents/GitHub/TSN-2022-winter/cmake-build-debug/CMakeFiles/TSN_2022_winter.dir
+D:/documents/GitHub/TSN-2022-winter/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/documents/GitHub/TSN-2022-winter/cmake-build-debug/CMakeFiles/rebuild_cache.dir
