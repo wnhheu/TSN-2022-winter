@@ -1,82 +1,34 @@
-#include <iostream>
-#include <bits/stdc++.h>
+#ifndef ALGORITHM_H
+#define ALGORITHM_H
 #include "Graph.h"
-#include "Readin.h"
-#include "Algorithm.h"
-using namespace std;
-
-
-
-class KSP_astar
+#include <bits/stdc++.h>
+class Algorithm
 {
-private:
+protected:
+    Graph graph;
 
-    VertexNode vn[node_num], vnr[node_num];//正图、反图，用正向和反向的邻接表表示
+};
 
-    int link_size;
-
-    std::vector<link> links;
-
-    int dis[node_num];//每个节点的dis值
+class Dijkstra : public Algorithm
+{
 public:
-    KSP_astar()
+    Dijkstra(const Graph &oth)
     {
-        link_size = -1;
-        std::memset(dis, 0, sizeof dis);
-    }
-    void initialize(std::vector<link> &my_link)
-    {
-        links = my_link;
-        link_size = links.size();
-    }
-
-    int createGraph() { //构造图
-        int source_id, ter_id;
-        int cost;
-        for (int i = 0; i < link_size; i++) {
-            source_id = links[i].source_id;
-            ter_id = links[i].ter_id;
-            cost = links[i].cost;
-            if (vn[source_id].id == -1) vn[source_id].id = source_id;
-            if (vn[ter_id].id == 'Z') vn[ter_id].id = ter_id;
-            EdgeNode *edge_new = new EdgeNode(links[i]);
-            edge_new->ter_id = links[i].ter_id;
-            EdgeNode *p = vn[source_id].firstEdge;
-            if (vn[source_id].firstEdge == NULL) {
-                vn[source_id].firstEdge = edge_new;
-            } else {
-                while (p->next != NULL)
-                    p = p->next;
-                p->next = edge_new;//一个边有两个边表节点， 添加第一个边表节点
-
-            }
-            EdgeNode *edge_new2 = new EdgeNode(links[i]);
-            edge_new2->ter_id = source_id;
-            p = vn[ter_id].firstEdge;
-            if (vn[ter_id].firstEdge == NULL)
-                vn[ter_id].firstEdge = edge_new2;
-            else {
-                while (p->next != NULL)
-                    p = p->next;
-                p->next = edge_new2;//一条边有两个边表节点，添加第二个边表节点
-            }
-        }
-
-        for (int i = 0; i < node_num; i++) //无向图的复制
-            vnr[i] = vn[i];
-
-        return 1;
+        graph = oth;
     }
 
     bool dijkstra(int source_id, int ter_id) //dijkstra 求解dis值
     {
 //V为顶点集，S为已求得最短距离的点的集合，T为余下点的集合，初始时，S={},T=V,T用带pair的vector实现，当T为空时，代表所有点均以到达集合S中，算法结束，当一个节点从集合T中迁移至S中时，这个顶点对应的距离值便是此节点到起点的最短距离值。
         long max = 1e8;
-        int parent[node_num];//更新时记录每个节点的父节点，只有这个距离更新，此节点的父>节点才会更新
-        for (int i = 0; i < node_num; i++)
+        VertexNode *vn = graph.get_vn();
+        VertexNode *vnr = graph.get_vnr();
+        int *dis = graph.get_dis();
+        int parent[graph.node_size()];//更新时记录每个节点的父节点，只有这个距离更新，此节点的父>节点才会更新
+        for (int i = 0; i < graph.node_size(); i++)
             parent[i] = -1;
         vector<pair<int, int>> queue;//不是优先级队列,第一个代表距离，第二个代表节点
-        for (int i = 0; i < node_num; i++) {
+        for (int i = 0; i < graph.node_size(); i++) {
             if (vnr[i].id != -1) {
                 if (vnr[i].id == ter_id)
                     queue.push_back(make_pair(0, vnr[i].id));//起点的距离值为0
@@ -112,8 +64,21 @@ public:
         }
     }
 
-    bool Astar(int source_id, int ter_id, int k)//A star 求解K短路
+};
+
+class Astar : public Algorithm
+{
+public:
+    Astar(const Graph &oth)
     {
+        graph = oth;
+    }
+
+    bool astar(int source_id, int ter_id, int k)//A star 求解K短路
+    {
+        VertexNode *vn = graph.get_vn();
+        VertexNode *vnr = graph.get_vnr();
+        int *dis = graph.get_dis();
         if (vn[source_id].id == -1) {
             cout << "node doesn't exist" << endl;
             return 0;
@@ -198,20 +163,4 @@ public:
 
 };
 
-int main() {
-    int from;
-    int to;
-    int k;
-    std::vector<link> my_link;
-    my_link.push_back(link());
-    ReadIn readin;
-    readin.read();
-    my_link = readin.get_data();
-    KSP_astar my_ksp;
-    my_ksp.initialize(my_link);
-    std::cin >> from >> to >> k;
-    my_ksp.createGraph();
-    my_ksp.dijkstra(from, to);
-    my_ksp.Astar(from, to, k);
-
-}
+#endif
