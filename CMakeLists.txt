@@ -6,3 +6,4 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--stack,999999")
 
 
 add_executable(TSN_2022_winter main.cpp)
+

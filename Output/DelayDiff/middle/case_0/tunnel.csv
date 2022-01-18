@@ -1,3 +1,0 @@
-demandID,SourceID,DestinationID,MinDelay,MaxDelay,Bandwidth,Ishotstandby,DelayDifference,DisjointType,WorkOptCost
-87,127,452,222.4,232.8,10,1,0,0,29000
-86,421,458,270.7,284.9,10,1,0,0,45332
