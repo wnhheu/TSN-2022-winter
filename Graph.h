@@ -1,5 +1,6 @@
 #ifndef GRAPH_H
 #define GRAPH_H
+#include <bits/stdc++.h>
 struct link
 {
     int link_id;
@@ -23,15 +24,55 @@ struct link
     }
 };
 
-struct EdgeNode { //图用邻接表存储，这是邻接表中的边表节点，类中成员均为pulic,便于访问和修改
-    
-    EdgeNode(int ter_id = -1, int cost = -1) : ter_id(ter_id), cost(cost) { next = NULL; }
+struct EdgeNode
+{ //图用邻接表存储，这是邻接表中的边表节点，类中成员均为pulic,便于访问和修改
 
-    EdgeNode(const link &oth);
+    EdgeNode(int ter_id = -1, int cost = -1) : ter_id(ter_id), cost(cost) { next = nullptr; }
 
-    EdgeNode(const EdgeNode &oth);
+    EdgeNode(const link &oth)
+    {
+        next = nullptr;
+        cost = oth.cost;
+        ter_id = oth.ter_id;
+        bandwidth = oth.bandwidth;
+        delay = oth.delay;
+        srlgNum = oth.srlgNum;
+        srlgs = new int[srlgNum];
+        for (int i = 0; i < srlgNum; ++i)
+        {
+            srlgs[i] = oth.srlgs[i];
+        }
+    }
 
-    EdgeNode &operator=(const EdgeNode &oth);
+    EdgeNode(const EdgeNode &oth)
+    {
+        next = oth.next;
+        cost = oth.cost;
+        ter_id = oth.ter_id;
+        bandwidth = oth.bandwidth;
+        delay = oth.delay;
+        srlgNum = oth.srlgNum;
+        srlgs = new int[srlgNum];
+        for (int i = 0; i < srlgNum; ++i)
+        {
+            srlgs[i] = oth.srlgs[i];
+        }
+    }
+
+    EdgeNode &operator=(const EdgeNode &oth)
+    {
+        next = oth.next;
+        cost = oth.cost;
+        ter_id = oth.ter_id;
+        bandwidth = oth.bandwidth;
+        delay = oth.delay;
+        srlgNum = oth.srlgNum;
+        srlgs = new int[srlgNum];
+        for (int i = 0; i < srlgNum; ++i)
+        {
+            srlgs[i] = oth.srlgs[i];
+        }
+    }
 
     ~EdgeNode() {}
 
@@ -44,8 +85,9 @@ struct EdgeNode { //图用邻接表存储，这是邻接表中的边表节点，
     EdgeNode *next;
 };
 
-struct VertexNode { //邻接表中的顶点表节点，所有成员均为public
-    VertexNode(int id = -1, EdgeNode *firstEdge = NULL) : id(id), firstEdge(firstEdge) {}
+struct VertexNode
+{ //邻接表中的顶点表节点，所有成员均为public
+    VertexNode(int id = -1, EdgeNode *firstEdge = nullptr) : id(id), firstEdge(firstEdge) {}
     int id;
     EdgeNode *firstEdge;
     ~VertexNode() {}
@@ -54,52 +96,69 @@ struct VertexNode { //邻接表中的顶点表节点，所有成员均为public
 class Graph
 {
 private:
-    const int node_num = 10000;
-
+    const int node_num = 2000;
+    int num;
     VertexNode *vn;
-    VertexNode *vnr;//正图、反图，用正向和反向的邻接表表示
+    VertexNode *vnr; //正图、反图，用正向和反向的邻接表表示
 
     int link_size;
 
     std::vector<link> links;
 
-    int *dis;//每个节点的dis值
+    int *delay; //每个节点的delay值
+    int *cost;
+
 public:
-    Graph();
+    Graph()
+    {
+        link_size = -1;
+        vn = new VertexNode[node_num];
+        vnr = new VertexNode[node_num];
+        delay = new int[node_num];
+        cost = new int[node_num];
+        num = 0;
+        // std::memset(delay, 0, sizeof delay);
+    }
 
     Graph(const Graph &oth)
     {
-        vn = new VertexNode [node_num];
-        vnr = new VertexNode [node_num];
-        dis = new int [node_num];
-        for(int i = 0; i < node_num; ++i)
+        vn = new VertexNode[node_num];
+        vnr = new VertexNode[node_num];
+        delay = new int[node_num];
+        cost = new int[node_num];
+        num = oth.num;
+        for (int i = 0; i < node_num; ++i)
         {
             vn[i] = oth.vn[i];
             vnr[i] = oth.vnr[i];
-            dis[i] = oth.dis[i];
+            delay[i] = oth.delay[i];
+            cost[i] = oth.cost[i];
         }
     }
     Graph operator=(const Graph &oth)
     {
-        vn = new VertexNode [node_num];
-        vnr = new VertexNode [node_num];
-        dis = new int [node_num];
-        for(int i = 0; i < node_num; ++i)
+        vn = new VertexNode[node_num];
+        vnr = new VertexNode[node_num];
+        delay = new int[node_num];
+        cost = new int[node_num];
+        num = oth.num;
+        for (int i = 0; i < node_num; ++i)
         {
             vn[i] = oth.vn[i];
             vnr[i] = oth.vnr[i];
-            dis[i] = oth.dis[i];
+            delay[i] = oth.delay[i];
+            cost[i] = oth.cost[i];
         }
+        return *this;
     }
-
 
     void initialize(std::vector<link> &my_link);
 
-    int createGraph();  //构造图
+    int createGraph(); //构造图
 
     int node_size()
     {
-        return node_num;
+        return num;
     }
 
     VertexNode *get_vn()
@@ -112,9 +171,9 @@ public:
         return vnr;
     }
 
-    int *get_dis()
+    int *get_delay()
     {
-        return dis;
+        return delay;
     }
 };
 

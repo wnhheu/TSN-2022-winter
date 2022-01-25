@@ -8,6 +8,9 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "D:\\Users\\Documents\\GitHub\\TSN-2022-winter\\main.cpp",
+                "D:\\Users\\Documents\\GitHub\\TSN-2022-winter\\Graph.cpp",
+                "D:\\Users\\Documents\\GitHub\\TSN-2022-winter\\Readin.cpp",
+                "D:\\Users\\Documents\\GitHub\\TSN-2022-winter\\Algorithm.cpp",
                 "-o",
                 "D:\\Users\\Documents\\GitHub\\TSN-2022-winter\\a.out"
             ],

@@ -1,5 +1,10 @@
 #ifndef READIN_H
 #define READIN_H
+#include <bits/stdc++.h>
+#include "Graph.h"
+
+using namespace std;
+
 class ReadIn
 {
 private:

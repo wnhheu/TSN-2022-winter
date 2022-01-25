@@ -5,7 +5,8 @@ void ReadIn::read()
 {
     std::string line;
     std::string filename;
-    std::ifstream in("D:\\Users\\Documents\\GitHub\\TSN-2022-winter\\Data\\DelayRange\\dc2\\topo.csv");
+    std::ifstream in("D:\\Users\\Documents\\GitHub\\data\\DelayRange\\dc2\\topo.csv");
+    // std::ifstream in("D:\\Users\\Documents\\GitHub\\data\\functioncase\\topo.csv");
     if (in.fail())
     {
         std::cout << "File not found" << std::endl;
