@@ -51,27 +51,49 @@ private:
         node(int id = 0, int dis = 0) : id(id), dis(dis) {}
     };
 
+    struct Path
+    {
+        std::vector<int> path_info;
+        int cost;
+        int delay;
+        Path()
+        {
+            cost = INT32_MAX;
+            delay = INT32_MAX;
+            path_info.reserve(30);
+        }
+
+        void clear()
+        {
+            path_info.clear();
+        }
+
+        void push_back(int x)
+        {
+            path_info.push_back(x);
+        }
+
+        int size()
+        {
+            return path_info.size();
+        }
+
+        friend bool operator<(const Path &a, const Path &b)
+        {
+            return a.cost < b.cost;
+        }
+        friend bool operator>(const Path &a, const Path &b)
+        {
+            return a.cost > b.cost;
+        }
+    };
+
     struct pulse_info
     {
         // set capacity
-        std::vector<int> mini_cost;
-        std::vector<int> mini_delay;
-        std::vector<int> random_rep;
-        int mini_cost_cost;
-        int mini_cost_delay;
-        int mini_delay_cost;
-        int mini_delay_delay;
-        int random_rep_cost;
-        int random_rep_delay;
-        pulse_info()
-        {
-            mini_cost_cost = INT32_MAX;
-            mini_cost_delay = INT32_MAX;
-            mini_delay_cost = INT32_MAX;
-            mini_delay_delay = INT32_MAX;
-            random_rep_cost = INT32_MAX;
-            random_rep_delay = INT32_MAX;
-        }
+        Path mini_cost;
+        Path mini_delay;
+        Path random_rep;
     };
 
     int dis[2000];
@@ -85,6 +107,7 @@ private:
     int lower_bound;
     int upper_bound;
     int total_cost;
+    std::priority_queue<Path, std::vector<Path>, greater<Path>> res;
     pulse_info info[2000];
     std::priority_queue<node, std::vector<node>, greater<node>> heap;
 
@@ -131,7 +154,6 @@ public:
     void pulse_algorithm();
 
     void print();
-
 };
 
 #endif

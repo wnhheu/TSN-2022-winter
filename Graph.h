@@ -74,7 +74,10 @@ struct EdgeNode
         }
     }
 
-    ~EdgeNode() {}
+    ~EdgeNode() 
+    {
+        delete srlgs;
+    }
 
     int ter_id;
     int cost;
@@ -105,8 +108,10 @@ private:
 
     std::vector<link> links;
 
-    int *delay; //每个节点的delay值
-    int *cost;
+    bool check_same_link(int start, int end, int cost, int delay)
+    {
+
+    }
 
 public:
     Graph()
@@ -114,8 +119,6 @@ public:
         link_size = -1;
         vn = new VertexNode[node_num];
         vnr = new VertexNode[node_num];
-        delay = new int[node_num];
-        cost = new int[node_num];
         num = 0;
         // std::memset(delay, 0, sizeof delay);
     }
@@ -124,30 +127,22 @@ public:
     {
         vn = new VertexNode[node_num];
         vnr = new VertexNode[node_num];
-        delay = new int[node_num];
-        cost = new int[node_num];
         num = oth.num;
         for (int i = 0; i < node_num; ++i)
         {
             vn[i] = oth.vn[i];
             vnr[i] = oth.vnr[i];
-            delay[i] = oth.delay[i];
-            cost[i] = oth.cost[i];
         }
     }
     Graph operator=(const Graph &oth)
     {
         vn = new VertexNode[node_num];
         vnr = new VertexNode[node_num];
-        delay = new int[node_num];
-        cost = new int[node_num];
         num = oth.num;
         for (int i = 0; i < node_num; ++i)
         {
             vn[i] = oth.vn[i];
             vnr[i] = oth.vnr[i];
-            delay[i] = oth.delay[i];
-            cost[i] = oth.cost[i];
         }
         return *this;
     }
@@ -171,10 +166,10 @@ public:
         return vnr;
     }
 
-    int *get_delay()
-    {
-        return delay;
-    }
+    // int *get_delay()
+    // {
+    //     return delay;
+    // }
 };
 
 #endif

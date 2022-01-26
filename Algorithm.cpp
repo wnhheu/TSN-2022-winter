@@ -1,7 +1,7 @@
 #include "Algorithm.h"
 #include <cstdlib> // Header file needed to use srand and rand
 #include <ctime>   // Header file needed to use time
-
+/*
 bool Dijkstra::dijkstra(int source_id, int ter_id) //dijkstra 求解delay值
 {
     //V为顶点集，S为已求得最短距离的点的集合，T为余下点的集合，初始时，S={},T=V,T用带pair的vector实现，当T为空时，代表所有点均以到达集合S中，算法结束，当一个节点从集合T中迁移至S中时，这个顶点对应的距离值便是此节点到起点的最短距离值。
@@ -55,7 +55,7 @@ bool Dijkstra::dijkstra(int source_id, int ter_id) //dijkstra 求解delay值
     }
     return false;
 }
-
+*/
 // 先搜哪一条路 
 // 空间换时间 
 
@@ -63,7 +63,8 @@ bool Astar::astar(int source_id, int ter_id, int k) //A star 求解K短路
 {
     VertexNode *vn = graph.get_vn();
     VertexNode *vnr = graph.get_vnr();
-    int *delay = graph.get_delay();
+    // int *delay = graph.get_delay();
+    int *delay = nullptr;
     if (vn[source_id].id == -1)
     {
         cout << "node doesn't exist" << endl;
@@ -168,8 +169,7 @@ void Pulse::dijkstra(int s, int t, bool flag)
         visited[u] = true;
         if (u == t)
         {
-            while (!heap.empty())
-                heap.pop();
+            heap = {};
             break;
         }
         for (EdgeNode *i = graph.get_vn()[u].firstEdge; i != nullptr; i = i->next)
@@ -262,7 +262,7 @@ bool Pulse::check(int u, int cost, int delay)
 bool Pulse::update(int u, int *path, int &cnt, double p, int cost, int delay)
 {
     bool flag = false;
-    if (info[u].mini_cost_cost > cost)  // Update the path with minimum cost
+    if (info[u].mini_cost.cost > cost)  // Update the path with minimum cost
     {
         info[u].mini_cost.clear();
         for (int i = 0; i < cnt; ++i)
@@ -270,11 +270,11 @@ bool Pulse::update(int u, int *path, int &cnt, double p, int cost, int delay)
             info[u].mini_cost.push_back(path[i]);
         }
         info[u].mini_cost.push_back(u);
-        info[u].mini_cost_cost = cost;
-        info[u].mini_cost_delay = delay;
+        info[u].mini_cost.cost = cost;
+        info[u].mini_cost.delay = delay;
         flag = true;
     }
-    if (info[u].mini_delay_delay > delay)   // Update the path with minimum delay
+    if (info[u].mini_delay.delay > delay)   // Update the path with minimum delay
     {
         info[u].mini_delay.clear();
         for (int i = 0; i < cnt; ++i)
@@ -282,8 +282,8 @@ bool Pulse::update(int u, int *path, int &cnt, double p, int cost, int delay)
             info[u].mini_delay.push_back(path[i]);
         }
         info[u].mini_delay.push_back(u);
-        info[u].mini_delay_cost = cost;
-        info[u].mini_delay_delay = delay;
+        info[u].mini_delay.cost = cost;
+        info[u].mini_delay.delay = delay;
         flag = true;
     }
     if (!flag && p > 0.5)   // if not meet the requirements above, update the random replace path
@@ -294,8 +294,8 @@ bool Pulse::update(int u, int *path, int &cnt, double p, int cost, int delay)
             info[u].random_rep.push_back(path[i]);
         }
         info[u].random_rep.push_back(u);
-        info[u].random_rep_cost = cost;
-        info[u].random_rep_delay = delay;
+        info[u].random_rep.cost = cost;
+        info[u].random_rep.delay = delay;
         flag = true;
     }
     if (flag)   // update the recorded partial path
@@ -317,6 +317,13 @@ void Pulse::dfs(int u, int *path, int &cnt, int cost, int delay)
         if (cost > total_cost)
             return;
         total_cost = cost;
+        Path tmp;
+        for(int i = 0; i < cnt; ++i)
+            tmp.push_back(path[i]);
+        tmp.push_back(u);
+        tmp.cost = cost;
+        tmp.delay = delay;
+        res.push(tmp);
         unsigned seed = time(0);
         srand(seed);
         double x = rand() % 100;
@@ -373,9 +380,16 @@ void Pulse::print() // print the result
 {
     std::cout << "Path: ";
     for (int i = 0; i < info[end].mini_cost.size(); ++i)
-        std::cout << info[end].mini_cost[i] << " ";
+        std::cout << info[end].mini_cost.path_info[i] << " ";
     std::cout << "\n" << "Cost is: ";
-    std::cout << info[end].mini_cost_cost << "\n";
+    std::cout << info[end].mini_cost.cost << "\n";
     std::cout << "Delay is: ";
-    std::cout << info[end].mini_cost_delay << "\n";
+    std::cout << info[end].mini_cost.delay << "\n";
+    Path tmp = res.top();
+    for(int i = 0; i < tmp.size(); ++i)
+        std::cout << tmp.path_info[i] << " ";
+        std::cout << "\n" << "Cost is: ";
+    std::cout << tmp.cost << "\n";
+    std::cout << "Delay is: ";
+    std::cout << tmp.delay << "\n";
 }
