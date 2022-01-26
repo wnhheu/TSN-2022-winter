@@ -8,8 +8,8 @@ void Graph::initialize(std::vector<link> &my_link)
 int Graph::createGraph()
 { //构造图
     int source_id, ter_id;
-    int tmp[2000];
-    for (int i = 0; i < 2000; ++i)
+    int tmp[5000];
+    for (int i = 0; i < 5000; ++i)
         tmp[i] = 0;
     int cost;
     for (int i = 0; i < link_size; i++)
@@ -51,7 +51,7 @@ int Graph::createGraph()
         }
     }
 
-    for (int i = 0; i < 2000; ++i)
+    for (int i = 0; i < 5000; ++i)
     {
         if (tmp[i] != 0)
             ++num;

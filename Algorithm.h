@@ -19,7 +19,7 @@ public:
         graph = oth;
     }
 
-    bool dijkstra(int source_id, int ter_id); //dijkstra 求解delay值
+    bool dijkstra(double source_id, double ter_id); //dijkstra 求解delay值
 };
 
 class Astar : public Algorithm
@@ -30,7 +30,7 @@ public:
         graph = oth;
     }
 
-    bool astar(int source_id, int ter_id, int k); //A star 求解K短路
+    bool astar(double source_id, double ter_id, double k); //A star 求解K短路
 };
 
 class Pulse : public Algorithm
@@ -38,8 +38,8 @@ class Pulse : public Algorithm
 private:
     struct node
     {
-        int id;
-        int dis;
+        double id;
+        double dis;
         friend bool operator<(const node &a, const node &b)
         {
             return a.dis < b.dis;
@@ -48,19 +48,19 @@ private:
         {
             return a.dis > b.dis;
         }
-        node(int id = 0, int dis = 0) : id(id), dis(dis) {}
+        node(double id = 0, double dis = 0) : id(id), dis(dis) {}
     };
 
     struct Path
     {
         std::vector<int> path_info;
-        int cost;
-        int delay;
+        double cost;
+        double delay;
         Path()
         {
-            cost = INT32_MAX;
-            delay = INT32_MAX;
-            path_info.reserve(30);
+            cost = 1000000;
+            delay = 1000000;
+            path_info.reserve(50);
         }
 
         void clear()
@@ -68,12 +68,12 @@ private:
             path_info.clear();
         }
 
-        void push_back(int x)
+        void push_back(double x)
         {
             path_info.push_back(x);
         }
 
-        int size()
+        double size()
         {
             return path_info.size();
         }
@@ -94,54 +94,79 @@ private:
         Path mini_cost;
         Path mini_delay;
         Path random_rep;
+        double maxi_delay;
+        pulse_info()
+        {
+            maxi_delay = 1000000;
+        }
+        void clear()
+        {
+            mini_cost.clear();
+            mini_delay.clear();
+            random_rep.clear();
+            maxi_delay = 1000000;
+        }
     };
 
-    int dis[2000];
-    int cost_map[2000];
-    int delay_map[2000];
+    double dis[5000];
+    double cost_map[5000];
+    double delay_map[5000];
     bool *visited;
     int num;
     int start;
     int end;
-    int t = 0;
-    int lower_bound;
-    int upper_bound;
-    int total_cost;
-    std::priority_queue<Path, std::vector<Path>, greater<Path>> res;
-    pulse_info info[2000];
+    double t = 0;
+    double lower_bound;
+    double upper_bound;
+    double total_cost;
+    double quo;
+    std::vector<Path> res;
+    pulse_info info[5000];
     std::priority_queue<node, std::vector<node>, greater<node>> heap;
 
-    bool check(int u, int cost, int delay);
+    bool check(int u, double cost, double delay);
 
-    bool update(int u, int *path, int &cnt, double p, int cost, int delay);
+    bool update(int u, int *path, int &cnt, double p, double cost, double delay);
+
+    static bool Compare(Path a, Path b)
+    {
+        return a.cost < b.cost;
+    }
+
+    void update_delay_info();
 
 public:
     Pulse(const Graph &oth)
     {
         graph = oth;
         num = graph.node_size();
-        // dis = new int [num];
+        // dis = new double [num];
         visited = new bool[num];
         start = -1;
         end = -1;
         lower_bound = -1;
         upper_bound = -1;
-        total_cost = INT32_MAX;
+        total_cost = 1000000;
+        quo = 0.8;
         for (int i = 0; i < num; ++i)
-            dis[i] = INT32_MAX;
-        for (int i = 0; i < num; ++i)
+        {
+            dis[i] = 1000000;
             visited[i] = false;
+        }
+            
     }
 
     void dijkstra(int s, int t, bool flag);
 
-    void set_start_and_end(int s, int t)
+    void set_start_and_end(double s, double t)
     {
         start = s;
         end = t;
     }
 
-    void set_bound(int l, int u)
+    void clear();
+
+    void set_bound(double l, double u)
     {
         lower_bound = l;
         upper_bound = u;
@@ -149,7 +174,7 @@ public:
 
     void initialize();
 
-    void dfs(int u, int *path, int &cnt, int cost, int delay);
+    double dfs(int u, int *path, int &cnt, double cost, double delay);
 
     void pulse_algorithm();
 

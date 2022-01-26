@@ -24,6 +24,25 @@ struct link
     }
 };
 
+struct tunnel
+{
+    int demand_id;
+    int source_id;
+    int ter_id;
+    double min_delay;
+    double max_delay;
+    int bandwidth;
+    tunnel()
+    {
+        demand_id = -1;
+        source_id = -1;
+        ter_id = -1;
+        min_delay = -1;
+        max_delay = -1;
+        bandwidth = -1;
+    }
+};
+
 struct EdgeNode
 { //图用邻接表存储，这是邻接表中的边表节点，类中成员均为pulic,便于访问和修改
 
@@ -74,7 +93,7 @@ struct EdgeNode
         }
     }
 
-    ~EdgeNode() 
+    ~EdgeNode()
     {
         delete srlgs;
     }
@@ -99,7 +118,7 @@ struct VertexNode
 class Graph
 {
 private:
-    const int node_num = 2000;
+    const int node_num = 5000;
     int num;
     VertexNode *vn;
     VertexNode *vnr; //正图、反图，用正向和反向的邻接表表示
@@ -110,7 +129,6 @@ private:
 
     bool check_same_link(int start, int end, int cost, int delay)
     {
-
     }
 
 public:
